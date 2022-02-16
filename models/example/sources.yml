@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: MYSQL_RDS_SAKILA
+    database: SAKILA_RAW
+    tables:
+      - name: ACTOR
+      - name: ADDRESS
+      - name: STORE
+      - name: STAFF
