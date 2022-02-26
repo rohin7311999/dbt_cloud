@@ -12,3 +12,9 @@ sources:
       - name: CITY
       - name: COUNTRY
       - name: RENTAL
+      - name: FILM
+  - name: PUBLIC
+    database: SAKILA_DW
+    tables:
+      - name: DIM_DATE
+      - name: DIM_TIMEOFDAY
