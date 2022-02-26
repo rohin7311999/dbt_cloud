@@ -1,15 +1,17 @@
 {{ config(materialized='table') }}
 
-select
-    stg_rental.RENTAL_ID,
-    dim_customer.CUSTOMER_KEY,
-    dim_staff.STAFF_KEY,
+SELECT 
+    d.DATE_KEY as rental_date_key,
+    tod.TIMEOFDAY_KEY as rental_timeofday_key,
+    //HOUR(r.rental_date),
+    //r.rental_date,
+    r.rental_id,
+    c.CUSTOMER_KEY,
+    sd.staff_key,
     1 as rental_quantity
-from
-    {{ref('stg_rental')}}
---join back to dim_customer
---join back to dim_staff
-    left join {{ref('dim_customer')}}
-        on stg_rental.CUSTOMER_ID = dim_customer.CUSTOMER_ID
-    left join {{ref('dim_staff')}}
-        on stg_rental.STAFF_ID = dim_staff.STAFF_ID
+FROM {{ ref('stg_rental') }} r
+     JOIN {{ ref('dim_date') }} d ON to_number(to_varchar(to_date(r.rental_date),'YYYYMMDD')) = d.DATE_KEY
+     JOIN {{ ref('dim_timeofday') }} tod ON HOUR(r.rental_date) = tod.HROFDAY AND MINOFDAY =0 and SECOFDAY=1
+     JOIN {{ ref('dim_customer') }} c ON r.customer_id = c.customer_id
+     JOIN {{ ref('dim_staff') }} sd ON r.staff_id = sd.STAFF_ID
+        WHERE to_date(r.rental_date) < '2020-01-01'
